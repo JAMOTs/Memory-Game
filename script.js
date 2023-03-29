@@ -58,10 +58,52 @@ function createDivsForColors(colorArray) {
 }
 
 // TODO: Implement this function!
+// function handleCardClick(event) {
+//   // you can use event.target to see which element was clicked
+//   console.log("you just clicked", event.target);
+// }
+let firstCard = null;
+let secondCard = null;
+let count = 0;
+
 function handleCardClick(event) {
-  // you can use event.target to see which element was clicked
-  console.log("you just clicked", event.target);
+  const clickedCard = event.target;
+  
+  // ignore clicks on already matched cards or when two cards are already open
+  if (clickedCard.classList.contains("matched") || count === 2) {
+    return;
+  }
+
+  // show clicked card by changing its background color
+  clickedCard.style.backgroundColor = clickedCard.classList[0];
+
+  if (!firstCard) {
+    // first card clicked, store it and wait for the second card
+    firstCard = clickedCard;
+  } else {
+    // second card clicked, store it and check for match
+    secondCard = clickedCard;
+
+    if (firstCard.classList[0] === secondCard.classList[0]) {
+      // matched cards, mark them as matched and reset variables
+      firstCard.classList.add("matched");
+      secondCard.classList.add("matched");
+      firstCard = null;
+      secondCard = null;
+    } else {
+      // not matched, wait a bit and then hide both cards
+      count = 2;
+      setTimeout(() => {
+        firstCard.style.backgroundColor = "";
+        secondCard.style.backgroundColor = "";
+        firstCard = null;
+        secondCard = null;
+        count = 0;
+      }, 1000);
+    }
+  }
 }
+
 
 // when the DOM loads
 createDivsForColors(shuffledColors);
